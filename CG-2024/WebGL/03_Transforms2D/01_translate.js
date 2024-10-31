@@ -16,10 +16,15 @@ const vsGLSL = `#version 300 es
 in vec2 a_position;
 
 uniform vec2 u_resolution;
+uniform vec2 u_translate;
 
 void main() {
+    // Add the translation to the position vector
+    vec2 t_position = a_position + u_translate;
+
     // Convert the position from pixels to 0.0 - 1.0
-    vec2 zeroToOne = a_position / u_resolution;
+    // vec2 zeroToOne = a_position / u_resolution; // este era el pasado que usabamos
+    vec2 zeroToOne = t_position / u_resolution;
 
     // Convert from 0->1 to 0->2
     vec2 zeroToTwo = zeroToOne * 2.0;
@@ -66,9 +71,13 @@ function drawScene(gl, vao, programInfo, bufferInfo) {
 
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
+  // let translation = [240, 150];
+  let translation = [800, 200];
+
   let uniforms = {
     u_resolution: [gl.canvas.width, gl.canvas.height],
     u_color: [Math.random(), Math.random(), Math.random(), 1],
+    u_translate: translation,
   };
 
   gl.useProgram(programInfo.program);

@@ -28,6 +28,7 @@ class ForestFire(Model):
         # This is necessary in this model because the next state of each cell depends on the current state of all its neighbors -- before they've changed.
         # This activation method requires that all the agents have a step() and an advance() method. 
         # The step() method computes the next state of the agent, and the advance() method sets the state to the new computed state.
+        # super().__init__()
         self.schedule = SimultaneousActivation(self)
         self.grid = SingleGrid(height, width, torus=False)
 

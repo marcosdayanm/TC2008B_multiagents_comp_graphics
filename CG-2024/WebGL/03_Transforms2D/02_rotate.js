@@ -16,10 +16,21 @@ const vsGLSL = `#version 300 es
 in vec2 a_position;
 
 uniform vec2 u_resolution;
+uniform vec2 u_translate;
+uniform vec2 u_rotate;
 
 void main() {
+    // Add the translation to the position vector
+    vec2 t_position = a_position + u_translate;
+
+    // Rotate the position, acá estamos aplicando la fórmula de la multiplicación de las matrices de seno y coseno
+    vec2 r_position = vec2(
+      t_position.x * u_rotate.x - t_position.y * u_rotate.y,
+      t_position.x * u_rotate.y + t_position.y * u_rotate.x
+    );
+
     // Convert the position from pixels to 0.0 - 1.0
-    vec2 zeroToOne = a_position / u_resolution;
+    vec2 zeroToOne = r_position / u_resolution;
 
     // Convert from 0->1 to 0->2
     vec2 zeroToTwo = zeroToOne * 2.0;
@@ -66,9 +77,21 @@ function drawScene(gl, vao, programInfo, bufferInfo) {
 
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
+  let translation = [500, -300];
+  // let translation = [400, 100];
+
+  // Rotation degrees to apply to webGL object
+  let rotation_degrees_angle = 30;
+  let rotation_radians = (rotation_degrees_angle * Math.PI) / 180;
+
+  // Mandar seno y coseno para aplicar rotación a los triángulos
+  let rotate = [Math.sin(rotation_radians), Math.cos(rotation_radians)];
+
   let uniforms = {
     u_resolution: [gl.canvas.width, gl.canvas.height],
     u_color: [Math.random(), Math.random(), Math.random(), 1],
+    u_translate: translation,
+    u_rotate: rotate,
   };
 
   gl.useProgram(programInfo.program);

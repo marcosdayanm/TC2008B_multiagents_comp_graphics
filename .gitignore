@@ -3,3 +3,5 @@ __pycache__/
 node_modules/
 *lock.yaml
 .env
+.DS_Store
+venv/
